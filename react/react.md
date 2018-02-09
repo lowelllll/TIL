@@ -13,7 +13,7 @@
 - python이랑 쓸 수 있다.
 - view 컨트롤 라이브러리 이다.
 
-## [webpack]()https://webpack.js.org/
+## [webpack](https://webpack.js.org/)
 리액트 코드는 브라우저가 이해할 수 있는 자바스크립트 코드로 변경해주어야 한다. 
 
 webpack은 리액트 코드를 자바스크립트 코드로 변경을 해주는 트랜스 파일러,모듈 번들러이다.
