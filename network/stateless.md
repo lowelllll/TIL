@@ -1,39 +1,4 @@
-﻿# HTTP와 Stateless
-## HTTP
-HTTP는 Hyper Text Transfer Protocol의 약자로 www 상에서 서버와 클라이언트 사이에서 이루어지는 요청(request)/응답(response) 프로토콜이다.
-
-### HTTP METHOD
-- HTTP 프로토콜에서 웹 서버가 요청과 응답 데이터를 전송하는 방식(서버에 요청하는 방법)
-- 8가지의 메소드가 있다
-	+ GET
-	+ POST
-	+ HEAD
-	+ OPTIONS
-	+ PUT
-	+ DELETE
-	+ TRACE
-	+ CONNECT
-
-### HTTP HEADER
-- 웹 서버로 보내는 요청과 요청 데이터를 설명하는 메타 정보가 포함되어있다.
-- 전송 가능 메타 정보
-	+ HTTP METHOD
-	+ 요청 URL
-	+ HTTP 프로토콜 버전
-	+ 추가적으로 지정된 이름과 값 등
-	
-    
-### HTTP 상태코드
-- 서버에 요청한 것이 정상적으로 작동했는지에 대한 응답
-- 응답은 5개의 클래스로 분류된다.
-	+ 정보 응답(1XX)
-	+ 성공(2XX)
-	+ 리디렉션(3XX)
-	+ 클라이언트 오류(4XX)
-	+ 서버 오류(5XX)
-- [HTTP 상태코드 자세히](https://developer.mozilla.org/ko/docs/Web/HTTP/Status)
-
-
+﻿# Stateless
 ## Stateless 
 Stateless는 서버를 구현하는 기술 종류 중 하나이다.
 
