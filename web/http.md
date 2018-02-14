@@ -21,6 +21,30 @@
 	+ TRACE
 	+ CONNECT
 
+### GET,POST
+- http method 중 가장 많이 사용하는 메소드는 GET과 POST이다. (html 폼에서 지정할 수 있는 메소드가 둘밖에 없음)
+#### GET
+
+	GET http://www.naver.com?query=lowell HTTP/1.1
+
+- uri의 ? 뒷부분에 키=값 쌍으로 이어 붙여 보낸다.
+- uri는 길이 제한이 있기 때문에 많은 데이터를 보내기 어려움.
+- 전달되는 사용자의 데이터가 주소창에 노출이 되어 보안에 불리함.
+- 사용되는 곳:검색,게시판 조회 등
+
+#### POST
+
+	POST http://naver.com/login HTTP/1.1
+	Content-Type:application ...
+
+	id = lowell
+	password = xxxxxxx
+
+- GET에서 uri에 포함시켰던 파라미터를 HTTP request 메시지의 바디 부분에 넣어 보냄.
+- 폼이나 추가적인 파라미터를 서버로 보내는 경우는 POST를 사용함.
+	+ 장고도 폼에선 POST 밖에 못씀.
+- 글쓰기,수정,보안이 필요한 로그인,회원가입 등
+
 ## HTTP 메세지 구조
 ![HTTP 메세지 구조](http://cfile25.uf.tistory.com/image/1546964E4E239D53091EAE)
 - header와 body는 생략 가능하다.
@@ -48,7 +72,7 @@
 	+ 추가적으로 지정된 이름과 값 등
 	
     
-### HTTP 상태코드
+## HTTP 상태코드
 - 서버에 요청한 것이 정상적으로 작동했는지에 대한 응답
 - 응답은 5개의 클래스로 분류된다.
 	+ 정보 응답(1XX)
