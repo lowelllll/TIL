@@ -12,11 +12,12 @@
 ## urlparse()
 > url을 분해,조립,변경처리를 한다.
 
-    >>>from urlparse imort urlparse
-    >>> result  = urlparse("http://www.python.org:80/gudio/python.html;philosophy?overall=3#n10")
-    >>> result
-    ParseResult(scheme='http', netloc='www.python.org:80', path='/gudio/python.html', params='philosophy', query='overall=3', fragment='n10')
-
+```python
+>>> from urlparse imort urlparse
+>>> result  = urlparse("http://www.python.org:80/gudio/python.html;philosophy?overall=3#n10")
+>>> result
+ParseResult(scheme='http', netloc='www.python.org:80', path='/gudio/python.html', params='philosophy', query='overall=3', fragment='n10')
+```
 + schem : 프로토콜
 + netloc : 네트워크 위치
 + path : 파일의 경로
@@ -39,208 +40,211 @@
     + GET 
         + www.naver.com 을 접속한 것과 같은 데이터를 웹서버로 가져옴
         + 브라우저는 html 형식의 데이터를 해석하여 보여주지만 파이썬 프로그램은 그대로 보여줌.
-
-                >>> from urllib2 import urlopen
-                >>> f = urlopen("http://www.naver.com")
-                >>> f.read(500)
-    
+            ```python                
+            >>> from urllib2 import urlopen
+            >>> f = urlopen("http://www.naver.com")
+            >>> f.read(500)
+            ```    
     + POST
         + data 인자를 지정해주면 함수는 자동으로 POST 방식으로 요청을 보냄.(실제 동작을 확인하려면 POST 요청을 처리할 수 있는 서버가 필요함)
-
-                >>> f = urlopen("http://www.naver.com",data)
-                >>> f.read(500)
-    
+            ```python
+            >>> f = urlopen("http://www.naver.com",data)
+            >>> f.read(500)
+            ```
 - 요청 헤더 추가, 변경이 필요한 경우 : request 클래스 사용
     + url 인자에 문자열 대신 request 객체를 지정
     + request 객체를 생성하고 add_header()와 add_data() 메소드로 헤더와 데이터를 추가하여 웹 서버로 요청을 보냄
-
-            >>> import urllib2
-            >>> req = urllib2.Request("http://www.naver.com") #request 객체 생성
-            >>> req.add_header("Content-Type","text/plain")
-            >>> req.add_data("query=python") #POST method
-            >>> f = urllib2.urlopen(req)
-            >>> print f.read(300)
-
+        ```python
+        >>> import urllib2
+        >>> req = urllib2.Request("http://www.naver.com") #request 객체 생성
+        >>> req.add_header("Content-Type","text/plain")
+        >>> req.add_data("query=python") #POST method
+        >>> f = urllib2.urlopen(req)
+        >>> print f.read(300)
+        ```
 
 - 인증,쿠키,프록시 등 복잡한 요청 처리 : 인증,쿠키,프록시 해당 핸들러 클래스 사용
     + 각 기능에 맞는 핸들러 객체를 정의하고 그  핸들러를 build_opener() 함수를 사용하여 opener로 등록
     + opener를 urlopen() 함수로 열기 위해선 install_opener() 함수를 사용하여 default opener로 설정하면 됨.
     + 인증
         + HTTPBasicAuthHandler 클래스를 사용하여 인증 데이터를 같이 보냄
-               
-                >>> import urllib2
-                >>> auth_handler = urllib2.HTTPBasicAuthHandler()
-                >>> auth_handler.add_password(realm='PDQ Application',
-                ...                             uri='https://mahler:8092/site-updates.py',
-                ...                             user='lowell',
-                ...                             passwd='opppennner!') # 객체 정의
-                >>> opener = urllib2.build_opener(auth_handler) # 오프너 등록
-                >>> urllib2.install_opener(opener) # 디폴드 오프너로 설정
-                >>> u = urllib2.urlopen('http://www.example.com/login.html') # 정상적을 동작하기 위해선 인증요청을 받는 서버의 인증요청 api에 대한 url을 정확히 입력해야함
-
+            ```python
+            >>> import urllib2
+            >>> auth_handler = urllib2.HTTPBasicAuthHandler()
+            >>> auth_handler.add_password(realm='PDQ Application',
+            ...                             uri='https://mahler:8092/site-updates.py',
+            ...                             user='lowell',
+            ...                             passwd='opppennner!') # 객체 정의
+            >>> opener = urllib2.build_opener(auth_handler) # 오프너 등록
+            >>> urllib2.install_opener(opener) # 디폴드 오프너로 설정
+            >>> u = urllib2.urlopen('http://www.example.com/login.html') # 정상적을 동작하기 위해선 인증요청을 받는 서버의 인증요청 api에 대한 url을 정확히 입력해야함
+            ```
    + 쿠키
         + HTTPCookieProcessor 클래스를 사용하여 쿠키 데이터를 같이보냄
-
-                >>> import urllib2
-                >>> cookie_handler = urllib2.HTTPCookieProcessor() # 쿠키 핸들러 생성, 쿠키 데이터 처리느 디폴트로 CookieJar 객체를 사용함.
-                >>> opener = urllib2.build_opener(cookie_handler)
-                >>> urllib2.install_opener(opener)
-                >>> u = urllib2.urlopen('http://www.example.com/login.html')  
+            ```python
+            >>> import urllib2
+            >>> cookie_handler = urllib2.HTTPCookieProcessor() # 쿠키 핸들러 생성, 쿠키 데이터 처리는 디폴트로 CookieJar 객체를 사용함.
+            >>> opener = urllib2.build_opener(cookie_handler)
+            >>> urllib2.install_opener(opener)
+            >>> u = urllib2.urlopen('http://www.example.com/login.html')
+            ```  
     + 프록시 
         + ProxyHandler,ProxyBasicAuthHandler 클래스를 사용해 프록시 서버를 통과해 웹 서버로 요청을 보냄.
-
-                import urllib2
-                >>> proxy_handler = urllib2.ProxyHandler({'http':'http://www.example.com:3128/'})
-                >>> proxy_auth_handler = urllib2.ProxyBasicAuthHandler()
-                >>> proxy_auth_handler.add_password('realm','host','username','password')
-                >>> opener = urllib2.build_opener(proxy_handler,proxy_auth_handler)
-                >>> u = opener.open('http://www.example.com/login.html')
-                # install_opener(),urlopen() 함수 대신에 직접 open 함수를 사용할 수 있음
+            ```python
+            import urllib2
+            >>> proxy_handler = urllib2.ProxyHandler({'http':'http://www.example.com:3128/'})
+            >>> proxy_auth_handler = urllib2.ProxyBasicAuthHandler()
+            >>> proxy_auth_handler.add_password('realm','host','username','password')
+            >>> opener = urllib2.build_opener(proxy_handler,proxy_auth_handler)
+            >>> u = opener.open('http://www.example.com/login.html')
+            # install_opener(),urlopen() 함수 대신에 직접 open 함수를 사용할 수 있음
+            ```
 
 ### urllib2 모듈로 웹사이트에서 이미지 리스트 불러오기
 - 특정 웹 사이트에서 이미지만을 검색하여 그 리스트를 보여주는 코드
+    ```python
+    from urllib2 import urlopen
+    from HTMLParser import HTMLParser
 
-        from urllib2 import urlopen
-        from HTMLParser import HTMLParser
-
-        class ImageParser(HTMLParser): # HTMLParser 클래스를 사용할땐 상속받는 클래스를 정의하고 필요한 내용을 오버라이드 함.
-            def handle_starttag(self,tag,attrs): # image 태그를 찾기위해 handler_starttag() 함수 오버라이드
-                if tag != 'img': 
+    class ImageParser(HTMLParser): # HTMLParser 클래스를 사용할땐 상속받는 클래스를 정의하고 필요한 내용을 오버라이드 함.
+        def handle_starttag(self,tag,attrs): # image 태그를 찾기위해 handler_starttag() 함수 오버라이드
+            if tag != 'img': 
                     return
-                if not hasattr(self,'result'): 
+            if not hasattr(self,'result'): 
                     self.result= []
-                for name , value in attrs: # img src 속성을 찾으면 속성 값을 self.result 리스트에 추가함.
-                    if name == 'src':
-                        self.result.append(value)
+            for name , value in attrs: # img src 속성을 찾으면 속성 값을 self.result 리스트에 추가함.
+                if name == 'src':
+                    self.result.append(value)
 
-        def parseImage(data): # HTML 문장이 주어지면 ImageParser 클래스를 사용해서 이미지를 찾고 그 리스트를 출력해주는 함수
-            parser = ImageParser()
-            parser.feed(data) # HTML 문장을 feed() 함수에 주면 바로 파싱하고 그 결과를 parser.result 리스트에 추가함
-            dataSet = set(x for x in parser.result) # 파싱결과를 set타입의 dataSet으로 모아줌
-            print '\n'.join(sorted(dataSet)) # dataSet으로 모은 파싱 결과를 정렬한 후에 출력함
+    def parseImage(data): # HTML 문장이 주어지면 ImageParser 클래스를 사용해서 이미지를 찾고 그 리스트를 출력해주는 함수
+        parser = ImageParser()
+        parser.feed(data) # HTML 문장을 feed() 함수에 주면 바로 파싱하고 그 결과를 parser.result 리스트에 추가함
+        dataSet = set(x for x in parser.result) # 파싱결과를 set타입의 dataSet으로 모아줌
+        print '\n'.join(sorted(dataSet)) # dataSet으로 모은 파싱 결과를 정렬한 후에 출력함
 
-        def main(): # 메인함수 구글의 사이트를 검색하여 이미지를 찾는 함수
-            url = 'http://www.google.co.kr'
+    def main(): # 메인함수 구글의 사이트를 검색하여 이미지를 찾는 함수
+        url = 'http://www.google.co.kr'
 
-            f = urlopen(url)
-            charset = f.info().getparam('charset') # 사이트에서 가져오는 데이터는 인코딩된 데이터이므로 인코딩 방식을 알아내어 그 방식으로 디코딩을 해줌
-            data = f.read().decode(charset)
-            f.close()
+        f = urlopen(url)
+        charset = f.info().getparam('charset') # 사이트에서 가져오는 데이터는 인코딩된 데이터이므로 인코딩 방식을 알아내어 그 방식으로 디코딩을 해줌
+        data = f.read().decode(charset)
+        f.close()
 
-            print "\n>>>>>>>> Fetch Images from",url
-            parseImage(data) # 이미지를 찾기 위해 parseimage 함수를 호출함
+        print "\n>>>>>>>> Fetch Images from",url
+        parseImage(data) # 이미지를 찾기 위해 parseimage 함수를 호출함
 
 
-        if __name__ == '__main__':
-            main()  # 프로그램을 시작하기 위해서 main함수를 호출함.
-
+    if __name__ == '__main__':
+        main()  # 프로그램을 시작하기 위해서 main함수를 호출함.
+    ```
 ## httplib 
 - urllib2 모듈에 없는 GET,POST 이외의 방식으로 요청을 보내거나 요청 헤더와 바디 사이에 타이머를 두어 시간을 지연시키는 등의 경우, http 프로토콜 요청에 대한 저수준의 더 세밀한 기능이 필요할때 사용
 - urllib2도 httplib 모듈에서 제공하는 api를 사용하여 만든거임
 
 ### httplib 모듈 사용시 코딩 순서
 1. 연결 객체 생성
-
+    ```python
     conn=httplib.HTTPConnection('www.python.org') #Host
+    ```
 
 2. 요청을 보냄 
-
+    ```python
     conn.request("GET","index.html")
-
+    ```
 3. 응답 객체 생성
-
+    ```python
     response = conn.getresponse()
-
+    ```
 4. 응답 데이터 읽음 
-
+    ```python
     data = response.read()
-
+    ```
 5. 연결을 닫음
-
+    ```python
     conn.close()
-
+    ```
 ### http method에 따른 요청 방법
 - GET 요청
-
-        >>> import httplib
-        >>> conn = httplib.HTTPConnection("www.example.com") # url이 아닌 host를 넣어야함 http://이거 넣으면 안됨
-        >>> conn.request("GET",'/index.html') # request(method,url,body,headers)
-        >>> r1 = conn.getresponse()
-        >>> print r1.status,r1.reason # 응답 헤더 정보가 들어있음
-        200 OK
-        >>> data1= r1.read() # 데이터를 모두 읽어야 다음 request() 요청을 할 수 있음.
-        >>> conn.request("GET","/parrot.spam")
-        >>> r2 = conn.getresponse()
-        >>> print r2.status,r2.reason
-        404 Not Found
-        >>> data2 = r2.read()
-        >>> conn.close()
-
+    ```python
+    >>> import httplib
+    >>> conn = httplib.HTTPConnection("www.example.com") # url이 아닌 host를 넣어야함 http://이거 넣으면 안됨
+    >>> conn.request("GET",'/index.html') # request(method,url,body,headers)
+    >>> r1 = conn.getresponse()
+    >>> print r1.status,r1.reason # 응답 헤더 정보가 들어있음
+    200 OK
+    >>> data1= r1.read() # 데이터를 모두 읽어야 다음 request() 요청을 할 수 있음.
+    >>> conn.request("GET","/parrot.spam")
+    >>> r2 = conn.getresponse()
+    >>> print r2.status,r2.reason
+    404 Not Found
+    >>> data2 = r2.read()
+    >>> conn.close()
+    ```
 - HEAD 
-
-        >>> import httplib
-        >>> conn = httplib.HTTPConnection("www.example.com")
-        >>> conn.request("HEAD","/index.html")
-        >>> res = conn.getresponse()
-        >>> print res.status,res.reason
-        200 OK
-        >>> data = res.read()
-        >>> print len(data) 
-        0
-        >>> data == ''
-        True
-        # head 요청에 대한 응답에 헤더는 있지만 바디는 없으므로 길이는 0
-
+    ```python
+    >>> import httplib
+    >>> conn = httplib.HTTPConnection("www.example.com")
+    >>> conn.request("HEAD","/index.html")
+    >>> res = conn.getresponse()
+    >>> print res.status,res.reason
+    200 OK
+    >>> data = res.read()
+    >>> print len(data) 
+    0
+    >>> data == ''
+    True
+    # head 요청에 대한 응답에 헤더는 있지만 바디는 없으므로 길이는 0
+    ```
 - POST
-
-        >>> import httplib,urllib
-        >>> params = urllib.urlencode({'@number':1234,'@type':'issue','@action':'show'})
-        # POST 요청으로 보낼 파라미터에 대해 URL 인코딩
-        >>> headers = {"Content-type":'application/x-www-form-urlencode',"Accept":"text/plain"} 
-        >>> conn = httplib.HTTPConnection("bugs.python.org")
-        >>> conn.request("POST","",params,headers)
-        >>> response = conn.getresponse()
-        >>> print response.status,response.reason
-        301 Moved Permanently
-        >>> data = response.read()
-        >>> data
-        '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">...
-        >>> conn.close()
-
+    ```python
+    >>> import httplib,urllib
+    >>> params = urllib.urlencode({'@number':1234,'@type':'issue','@action':'show'})
+    # POST 요청으로 보낼 파라미터에 대해 URL 인코딩
+    >>> headers = {"Content-type":'application/x-www-form-urlencode',"Accept":"text/plain"} 
+    >>> conn = httplib.HTTPConnection("bugs.python.org")
+    >>> conn.request("POST","",params,headers)
+    >>> response = conn.getresponse()
+    >>> print response.status,response.reason
+    301 Moved Permanently
+    >>> data = response.read()
+    >>> data
+    '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">...
+    >>> conn.close()
+    ```
 - PUT 
-
-        >>> import httplib
-        >>> conn = httplib.HTTPConnection("localhost",8888)
-        >>> BODY = "***filecontents***"
-        >>> conn.request("PUT","/file",BODY) 
-        >>> res = conn.getresponse()
-        >>> print res.status,res.reason
-        200 ok # 웹 서버에서 PUT 요청을 정상적으로 처리하여 / file이라는 파일을 만들고 그 내용에 BODY에서 지정한 문자열을 기록함.
-
+    ```python
+    >>> import httplib
+    >>> conn = httplib.HTTPConnection("localhost",8888)
+    >>> BODY = "***filecontents***"
+    >>> conn.request("PUT","/file",BODY) 
+    >>> res = conn.getresponse()
+    >>> print res.status,res.reason
+    200 ok # 웹 서버에서 PUT 요청을 정상적으로 처리하여 / file이라는 파일을 만들고 그 내용에 BODY에서 지정한 문자열을 기록함.
+    ```
 ### httplib 모듈을 활용해 웹사이트에서 이미지 다운로드 하기
 - 특정 웹사이트에서 이미지를 찾아 다운로드하는 프로그램
+    ```python
+    import httplib
+    from urlparse import urljoin,urlunparse
+    from urllib import urlretrieve
+    from HTMLParser import HTMLParser
+    import os
 
-        import httplib
-        from urlparse import urljoin,urlunparse
-        from urllib import urlretrieve
-        from HTMLParser import HTMLParser
-        import os
-
-        class ImageParser(HTMLParser):
-            def handle_starttag(self, tag, attrs): # img 태그 찾기
-                if tag != 'img':
-                    return
-                if not hasattr(self,'result'):
-                    self.result= []
-                for name,value in attrs:
-                    print "attrs name:"+name+" value:"+value
-                    if name == 'src': # img src 속성을 찾으면 속성 값을 self.result에 추가
-                        self.result.append(value)
+    class ImageParser(HTMLParser):
+        def handle_starttag(self, tag, attrs): # img 태그 찾기
+            if tag != 'img':
+                return
+            if not hasattr(self,'result'):
+                self.result= []
+            for name,value in attrs:
+                print "attrs name:"+name+" value:"+value
+                if name == 'src': # img src 속성을 찾으면 속성 값을 self.result에 추가
+                    self.result.append(value)
 
 
-        def downloadImage(srcUrl,data): # html 문장이 주어지면 ImageParser 클래스를 사용하여 이미지를 찾고 그 이미지들을 다운로드하는 함수
-            if not os.path.exists('DOWNLOAD'): # DOWNLOAD 폴더가 없을 시 만들어줌
-                os.makedirs('DOWNLOAD')
+    def downloadImage(srcUrl,data): # html 문장이 주어지면 ImageParser 클래스를 사용하여 이미지를 찾고 그 이미지들을 다운로드하는 함수
+        if not os.path.exists('DOWNLOAD'): # DOWNLOAD 폴더가 없을 시 만들어줌
+            os.makedirs('DOWNLOAD')
 
         parser = ImageParser()
         parser.feed(data) # html 문장을 feed() 함수에 주면 바로 파싱하고 그 결과를 parser.result에 추가함
@@ -254,7 +258,7 @@
             urlretrieve(src,targetFile) # urlretrieve() src로부터 파일을 가져와서 tagetFile 파일로 생성해줌.
 
 
-      def main():
+    def main():
         host = "www.google.co.kr"
 
         conn = httplib.HTTPConnection(host)
@@ -272,25 +276,27 @@
 
         if __name__ == "__main__":
             main()
+    ```
+
 - - - 
 # 웹 서버 라이브러리
 - 웹 서버 역할 : http 통신에서 클라이언트의 요청을 받고 이를 처리하여 그 결과를 되 돌려주는 것
 - 웹 서버 개발자는 프레임워크를 활용하여 응용 로직만 개발하면 효율적이지만 웹 서버 라이브러리를 알면 웹 프레임워크가 어떻게 동작하고 웹 서버 라이브러리가 웹 프레임워크에 어떻게 사용되는지 기술을 파악할 수 있음.
 
 ## 웹 서버를 만드는 기본적인 방법
+```python
+from BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler # 1
 
-    from BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler # 1
+class MyHandler(BaseHTTPRequestHandler): # 2
+    def do_GET(self):
+        self.wfile.write("Hello World!")
 
-    class MyHandler(BaseHTTPRequestHandler): # 2
-        def do_GET(self):
-            self.wfile.write("Hello World!")
-
-    if __name__ == "__main__":
-        server = HTTPServer(('',8888),MyHandler) # 3
-        print "Started WebServer on port 8888..."
-        print "Press ^C to quit WebServer"
-        server.serve_forever() # 4
-
+if __name__ == "__main__":
+    server = HTTPServer(('',8888),MyHandler) # 3
+    print "Started WebServer on port 8888..."
+    print "Press ^C to quit WebServer"
+    server.serve_forever() # 4
+```
 1. BaseHTTPServer 모듈 import
 2. BaseHTTPRequsetHandler를 상속받아 원하는 로직으로 핸들러 클래스를 정의
 3. 서버의 IP,PORT 및 핸들러 클래스를 인자로 하여 HttpServer 객체를 생성
@@ -335,40 +341,42 @@
 
     ### CGIHTTPServer 예시
     cgi_client.py
+    ```python
+    import urllib2
+    from urllib import urlencode
 
-        import urllib2
-        from urllib import urlencode
+    url = "http://localhost:8888/cgi-bin/script.py"
+    data = {
+        'language':'python',
+        'framework':'django',
+        'email':'lowell2735@gmail.com'
+    }
 
-        url = "http://localhost:8888/cgi-bin/script.py"
-        data = {
-            'language':'python',
-            'framework':'django',
-            'email':'lowell2735@gmail.com'
-        }
+    encData = urlencode(data)
 
-        encData = urlencode(data)
+    f = urllib2.urlopen(url,encData)
+    print f.read()
+    ```
 
-        f = urllib2.urlopen(url,encData)
-        print f.read()
-    
     cgi-bin/script.py 
-        
-        # -*- coding:UTF-8 -*-
-        import cgi
+    ```python    
+    # -*- coding:UTF-8 -*-
+    import cgi
 
-        # cgi 스크립트 파일은 cgi-bin 디렉토리 하위에 위치해야함
-        # 파일 엑세스 모드 755로 변경해야함
-        form = cgi.FieldStorage() # 클라이언트 요청에 담겨진 질의 문자열을 엑세스 하기 위해서 fieldstorage() 인스턴스 생성
-        language = form.getvalue('language')
-        framework = form.getvalue('framework')
-        email = form.getvalue('email')
+    # cgi 스크립트 파일은 cgi-bin 디렉토리 하위에 위치해야함
+    # 파일 엑세스 모드 755로 변경해야함
+    form = cgi.FieldStorage() # 클라이언트 요청에 담겨진 질의 문자열을 엑세스 하기 위해서 fieldstorage() 인스턴스 생성
+    language = form.getvalue('language')
+    framework = form.getvalue('framework')
+    email = form.getvalue('email')
 
-        print "Content-type: text/plain"
-        print '\r'
-        print "Welcome, CGI Scripts"
-        print "language is ",language
-        print "framework is ",framework
-        print "email is",email
+    print "Content-type: text/plain"
+    print '\r'
+    print "Welcome, CGI Scripts"
+    print "language is ",language
+    print "framework is ",framework
+    print "email is",email
+    ```
 
 ## xxxHTTPServer 모듈 간 관계
 ![xxxHTTPServer 모듈의 클래스 간 상속도](http://cfile5.uf.tistory.com/image/236D6E3955D07D4E1AB506)
@@ -401,18 +409,18 @@ WSGI 기술을 사용하여 CGI를 처리함.'
 
 ### WSGI 규격에 따라 애플리케이션을 개발할 때 중요한 사항
 1. 개발이 필요한 애플리케이션을 함수/클래스의 메소드로 정의하여 애플리케이션의 인자는 다음과 같이 정의
-
-        def application_name(environ,start_response):
-
+    ```python
+    def application_name(environ,start_response):
+    ```
     + environ 
         + 웹 프레임워크에 이미 정의되어있으며 HTTP_HOST,HTTP_USER_AGENT.. 같은 HTTP 환경변수를 포함함.
     + start_response
         + 애플리케이션 내에서 응답을 시작하기 위해 반드시 호출해야하는 함수
 
 2. start_response 함수의 인자
-
-        start_response(status,headers)
-
+    ```python
+    start_response(status,headers)
+    ```
     + status 
         + 응답코드
     + headers 
@@ -426,21 +434,21 @@ WSGI 기술을 사용하여 CGI를 처리함.'
 - 모든 프레임워크가 wsgiref 패키지를 사용하는건 아님
 
 #### WSGI 서버 예제
+```python
+def my_app(environ,start_response):
+    status = '200 ok'
+    headers = [('Content-type','text/plain')]
+    start_response(status,headers)
 
-    def my_app(environ,start_response):
-        status = '200 ok'
-        headers = [('Content-type','text/plain')]
-        start_response(status,headers)
+    return ["this is a sample WSGI Application"]
 
-        return ["this is a sample WSGI Application"]
+if __name__ == "__main__":
+    from wsgiref.simple_server import make_server
 
-    if __name__ == "__main__":
-        from wsgiref.simple_server import make_server
-
-        print "Started WSGI Server on port 8888.."
-        server = make_server('',8888,my_app)
-        server.serve_forever()
-
+    print "Started WSGI Server on port 8888.."
+    server = make_server('',8888,my_app)
+    server.serve_forever()
+```
 
 + WSGI 서버도 웹 서버이므로 웹 서버를 만드는 방식을 따름(핸들러 클래스가 아닌 애플리케이션 함수를 설정하여 객체를 생성함)
 
