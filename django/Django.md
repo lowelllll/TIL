@@ -141,4 +141,23 @@ project/templates
 project/blog/templates
 ```
 
-        
+## URL
+- 파이썬의 url 지정방식은 직관적이고 이해하기 쉬움.
+### URLconf
+- url을 정의하기위해 urls.py에서 url과 처리함수(views)를 매핑하는 것
+```python
+form django.conf.urls import url
+form . import views
+
+urlpatterns = [
+    url(r'^$',views.index),
+]
+```      
+- URLconf를 사용하면 url과 뷰 함수를 서로 자유롭게 연결할 수 있어 url과 뷰 함수 이름이 자주 바뀌는 경우에도 URLconf에서 매핑한 부분만 수정하면 됨.
+
+### 웹 클라이언트가 웹 서버에 페이지 요청 시, 장고에서 URL을 분석하는 순서
+1. setting.py 파일의 ROOT_URLCONF 항목을 읽어 urls.py의 위치를 알아냄.
+2. URLconf 모듈을 로딩하여 urlpatterns 변수에 지정되어있는 URL 리스트를 검사함.
+3. 위에서부터 순서대로 URL 리스트의 내용을 검사하면서 매치가 되면 검사를 종료
+4. 매치가 된 URL의 뷰를 호출함. 호출 시 HttpRequest 객체와 매칭할 때 추출된 단어들을 뷰에 인자로 넘겨줌.
+5. 리스트를 끝까지 검사했는데도 매칭에 실패하면 에러를 처리하는 뷰를 호출함. 
