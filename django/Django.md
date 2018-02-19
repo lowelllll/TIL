@@ -146,6 +146,7 @@ project/blog/templates
 ### URLconf
 - url을 정의하기위해 urls.py에서 url과 처리함수(views)를 매핑하는 것
 ```python
+# urls.py
 form django.conf.urls import url
 form . import views
 
@@ -161,3 +162,91 @@ urlpatterns = [
 3. 위에서부터 순서대로 URL 리스트의 내용을 검사하면서 매치가 되면 검사를 종료
 4. 매치가 된 URL의 뷰를 호출함. 호출 시 HttpRequest 객체와 매칭할 때 추출된 단어들을 뷰에 인자로 넘겨줌.
 5. 리스트를 끝까지 검사했는데도 매칭에 실패하면 에러를 처리하는 뷰를 호출함. 
+
+## View
+- 함수 또는 클래스의 메소드로 작성되며 웹 요청을 받고 응답을 반환해줌.
+- 응답은 HTML데이터, 리다이렉션 명령, 404 에러 메세지 등 많은 형태가 있음.
+- 다양한 형태의 응답 데이터를 만들어 내기위한 로직을 view에 작성함.
+- 보통 views.py 파일에 작성하며 다른 파일에 작성해도 무방함.(파이썬 경로에 있는 파일이어야 찾을 수 있음)
+```python
+# views.py
+from django.httpResponse
+import datetime
+
+def current_datetime(request):
+    now = datetime.datetime.now()
+    html = "<html><head></head><body>It is now %s.</body></html>" % now
+    return HttpResponse(html)
+```
+- 뷰 함수는 첫번째 인자로 HttpRequset 객체를 받음.
+- 처리를 한 후 최종적으로 HttpResponse 객체 반환.
+- 에러를 반환하고 싶을때
+```python
+return HttpResponseNotFound('<h1>Page not Found</h1>')
+```
+- - - 
+
+## 프로젝트 시작하기
+- 장고를 사용할 때 프로젝트 디렉토리와 애플리케이션 디렉토리를 구분하여 코딩하는 파일도 적절한 위치에 저장해야함.
+    - 애플리케이션을 한번만 개발하고 다른 프로젝트에 재사용 할 수 있어 개발의 생산성을 높일 수 있음
+- 애플리케이션 개발에 반드시 필요한 파일들은 장고가 생성해주고 개발자들은 그 내용을 채워넣기만 하면 됨.
+
+### 프로젝트 생성
+```
+django-admin startproject mysite
+```
+cmd창에서 위 명령어를 입력하면 폴더가 생긴다. 
+```
+C:mysite
+│  db.sqlite3
+│  manage.py
+│  
+├─.idea
+│  │  misc.xml
+│  │  modules.xml
+│  │  mysite.iml
+│  │  workspace.xml
+│  │  
+│  └─inspectionProfiles
+├─mysite
+│      settings.py
+│      urls.py
+│      wsgi.py
+│      __init__.py 
+```
+- project 이름으로 두개의 디렉토리가 생기는데 상위 디렉토리는 프로젝트 관련 디렉토리/파일을 모으는 역할만 하기때문에 특별한 의미를 가지고 있지는 않다.
+### 애플리케이션 생성
+```
+python manage.py startapp polls
+```
+### 데이터베이스 반영
+```
+python manage.py makemigrations
+```
+- 데이터베이스에 변경이 필요한 사항을 추출해주는 명령어
+- 테이블 및 필드의 생성,삭제,변경과 같은 데이터베이스에 대한 변경사항을 알려주는 정보
+```
+python manage.py migrate
+```
+- 데이터베이스에 변경사항이 있을때 이를 반영해주는 명령어
+- 마이그레이션 파일을 이용하여 migrate 명령이 데이터베이스에 테이블을 만들어줌.
+- 장고는 사용자(User)와 사용자의  그룹(Group)테이블을 미리 설계해두었으므로 실제 만들기 위해 프로젝트 개발 시점에 이 명령어를 실행시켜야함.
+- 처음 migrate 명령 후에는 db.sqlite3 파일이 생성됨(django는 디폴트로 SQLite3 db엔진을 사용)
+
+### 웹 서버 실행
+```
+python manage.py runserver {ip:port}
+```
+- ip와 port를 설정하지 않았을 경우 default로 localhost(127.0.0.1)의 port 8000에서 실행된다.
+```
+python manage.py runserver &
+```
+- 뒤에 &를 붙여주면 웹 서버 프로그램이 백그라운드에서 실행된다.
+
+### 관리자(슈퍼유저)생성
+```
+python manage.py createsuperuser
+```
+- admin 페이지에 접속하기 위한 관리자 계정을 만들어준다.
+
+이렇게 하면 프로젝트 기본 세팅은 완료*_*
