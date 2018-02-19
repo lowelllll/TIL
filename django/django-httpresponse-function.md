@@ -28,10 +28,10 @@ def view3(request):
 ```
 # django.core.urlresolvers utility functions
 ### reverse(viewname,urlconf,*args,**kwargs) 
-url name 사용할 수 있음
+- url 패턴으로 부터 url 스트링을 구할 수 있어 url 스트링을 하드코딩 하지 않도록 해줌.
 ```python
 reverse('admin:app_list', args,kwargs={'app_label': 'auth'})
-#/admin/auth/
+#/admin/auth/ url 스트링
 ```
 # HttpResponse,HttpResponseReirect 차이
 
