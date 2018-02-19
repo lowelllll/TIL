@@ -2,38 +2,37 @@
 
 ### render (request,template,context …)
 템플릿과 컨텍스트를 합쳐 HttpResponse 객체를 리턴함. 
-
-	def hello(request):
-    	return render(request,'index.html',{'foo':'bar'})
-
+```python
+def hello(request):
+    return render(request,'index.html',{'foo':'bar'})
+```
+아래 예는 위 코드 결과와 같다.
+```python	
+def view2(request):
+    template = get_template('index.html')
+    context= {'foo':'bar'}
+    return HttpResponse(template.render(context,request))
+```
 ### redirect(to, permanent=False, *args, **kwargs) 
 url 주소로 써주거나 url name을 쓰면 redirect 내부에서 자동으로 reverse를 호출하여 이름을 매칭하여 이동.
-
-	def view1(request):
-      	redirect('/url/')
-		return redirect('index.html',foo='bar') 
-  
-아래 예는 위 코드 결과와 같다.
-	
-    def view2(request):
-      template = get_template('index.html')
-      context= {'foo':'bar'}
-      return HttpResponse(template.render(context,request))
-
+```python
+def view1(request):
+    redirect('/url/')
+	return redirect('index.html',foo='bar') 
+```
 ### get_object_or_404(model)
 모델의 데이터를 가져올때 해당 모델을 가져오지 못한 경우 Http404를 raise 한다.
-
-	def view3(request):
-    	object = get_object_or_404(Model)
-
-
+```python
+def view3(request):
+    object = get_object_or_404(Model)
+```
 # django.core.urlresolvers utility functions
 ### reverse(viewname,urlconf,*args,**kwargs) 
 url name 사용할 수 있음
-
-	reverse('admin:app_list', kwargs={'app_label': 'auth'})
-    #/admin/auth/
-
+```python
+reverse('admin:app_list', args,kwargs={'app_label': 'auth'})
+#/admin/auth/
+```
 # HttpResponse,HttpResponseReirect 차이
 
 #### HttpResponse 
