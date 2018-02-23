@@ -8,7 +8,7 @@
 - 추가로 필요한 기능을 모듈로 만들어 동적 로딩 방식으로 기능을 확장할 수 있다.
 ### mod_wsgi
 - mod_wsgi는 파이썬 웹 애플리케이션을 실행 할 수 있는 확장 모듈 중 하나이다.
-- 파이썬의 웹 애플리케이션 표준 규격인 wSGI를 구현한 확장 모듈이며 파이선 웹 애플리케이션을 아파치에 실행하는데 사용함.
+- 파이썬의 웹 애플리케이션 표준 규격인 WSGI를 구현한 확장 모듈이며 파이선 웹 애플리케이션을 아파치에 실행하는데 사용함.
 - C언어로 구현되어있어 내부적으로 아파치가 직접 파이썬 API와 동작하므로 상대적으로 적은 메모리를 사용함. CGI에 비해 좋은 성능을 가짐.
 ### mod_wsgi를 사용해 웹 애플리케이션(WSGI 애플리케이션)을 실행하는 실행모드
 #### 내장모드
@@ -24,3 +24,26 @@
 - 필요하다면 WSGI 애플리케이션 간에도 서로 영향을 주지 않도록 실행 유저를 달리하여 데몬 프로세스를 기동하는 것이 가능하다.
 
 장고는 안정성을 고려해 내장모드보단 데몬모드로 실행할 것을 권장함.
+
+## 장고 웹 서버 연동 원리
+### wsgi.py
+- wsgi.py 파일은 startpoject 명령으로 만들어짐.
+- 장고와 웹 서버를 연결하는데 필요한 파일
+- WSGI 규격에 따라 호출 가능한(callable) 애플리케이션 객체를 정의함.
+    - 이 객체 명은 반드시 application 이여야한다. (장고가 자동으로 만들어줌)
+    - application 객체는 아파치 같은 상용 웹 서버뿐만이 아니라 장고 개발용 웹 서버 runserver에서도 같이 사용하는 객체임.
+    - 아파치는 http.conf 설정파일에서 WSGIScriptAlias 지시자를 통해 지정하고 개발용 runserver는 setting 모듈에서 WSGI_APPLICATION 변수로 지정한다.
+#### 설정 정보를 담고있는 setting 모듈의 위치를 지정하는 방법
+- 웹 서버는 application 객체를 호출하여 장고의 애플리케이션을 실행함.
+    - application 객체를 호출하기 전 현재의 프로젝트 및 프로젝트에 포함된 모든 애플리케이션들에 대한 설정 정보를 로딩하는 작업이 필요함.
+- 아파치 등 웹 서버는 wsgi.py 파일에서 지정
+```python
+# mysite/wsgi.py
+import os
+os.environ['DJANGO_SETTING_MODULE'] = 'mysite.settings'
+```    
+- 개발용 웹 서버는 실행옵션으로 지정, default는 프로젝트명.settings 사용
+```
+python manage.py runserver --settings=mysite.settings
+```
+
