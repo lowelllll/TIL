@@ -29,8 +29,8 @@ python manage.py shell
 - 필터를 가질 수 있고 필터를 사용하여 검색 결과에서 주어진 파라미터로 조건에 맞는 레코드만 추출함.
     + (SQL-where,limit)
 - 데이터베이스로부터 데이터를 조회하기 위해서는 QuerySet 객체를 사용함.
-    > QuerySet : 데이터베이스 테이블로부터 꺼내온 객체들의 콜렉션
-        >> 콜렉션 : 다수의 객체를 한 곳에 모아서 각 객체를 동일한 방식으로 다룰 수 있도록 해주는 데이터 구조.쉽게 말해서 여러 객체의 모임.
+    > QuerySet : 데이터베이스 테이블로부터 꺼내온 객체들의 콜렉션    
+    >> 콜렉션 : 다수의 객체를 한 곳에 모아서 각 객체를 동일한 방식으로 다룰 수 있도록 해주는 데이터 구조.쉽게 말해서 여러 객체의 모임.
 - 조회 결과를 담는 QuerySet을 얻으려면 objects 객체를 사용함
     > objects : 테이블의 정보를 담고있는 객체
 #### 모든 레코드 조회
@@ -323,3 +323,197 @@ def get_name(request):
 {{ form.as_li }} # <li> 태그로 감싸도록 렌더링 
 ```
 - table,ul 태그는 개발자가 직접 추가해야한다.
+## 클래스형 뷰
+- 클래스로 만들어진 뷰로,상속과 믹스인 기능을 사용하여 코드를 재사용할 수 있고 뷰를 체계적으로 구성함.
+### 클래스형 뷰 사용
+```python
+# urls.py
+urlpatterns = [
+    url(r'^about/',MyView.as_view())
+]
+```
+장고의 url 해석기는 요청과 관련된 파라미터들을 클래스가 아닌 함수에 전달하기 때문에 클래스 형 뷰는 클래스로 진입하기 위한 as_view() 클래스 메소들르 제공함.(진입 메소드)
+- as.view()
+    - 클래스의 인스턴스를 생성하고 그 인스턴스의 dispatch() 메소드 호출
+    - dispatch() 메소드는 요청을 검사하여 GET,POST 등 어떤 HTTP 메소드로 호출되었는지 알아내 인스턴스 내에서 해당 이름을 갖는 메소드로 요청을 중계함.
+
+```python
+from django.http import HttpResponse
+from django.views.generic import View
+
+class MyView(View): # View 클래스 상속
+    def get(self,requset): # get 메소드로 요청 시 result 반환
+        return HttpResponse('result')
+```
+- View 클래스에는 as_view(),dispatch() 메소드가 정의되어있음.
+
+### 클래스형 뷰 장점
+- 효율적인 메소드 구분
+    - HTTP 메소드에 따른 처리 기능을 코딩할때 if 함수를 사용하지 않고 메소드 명으로 구분하므로 코드 구조가 깔끔해짐.
+```python
+# 함수형 뷰
+def index(request):
+    if request.method=='POST':
+        ...
+# 클래스형 뷰
+class index(View):
+    def get(self,request): # dispatch() 메소드가 어떤 메소드로 요청되었는지 확인한 다음 해당 이름의 메소드로 요청.
+        ...
+```
+- 상속 기능 가능
+    - 다중 상속과 같은 객체지향기술이 가능함. 
+    - 코드의 재 사용성이나 개발 생산성을 획기적으로 높여줌.
+- 제네릭 뷰
+    - 뷰 개발 과정에서 공통적으로 사용할 수 있는 기능들을 추상화 하고 이를 장고에서 미리 만들어 기본적으로 제공해주는 클래스형 뷰.
+    - 요청 request 객체를 분석하고 템플릿 시스템에 넘겨줄 컨텍스트 변수를 구성하는 것은 제네릭 뷰에서 처리함.
+```python
+from django.views.generic import TemplateView
+
+class AboutView(TemplateView): # 장고가 제공해주는 TemplateView 제네릭뷰를 상속받아 사용
+    template_name = 'about.html'
+```
+#### 제네릭 뷰 분류
+- Base View : 뷰 클래스를 생성, 부모 클래스를 제공하는 기본 제네릭 뷰
+- Generic Display View : 객체의 리스트, 특정 객체의 상세정보를 보여줌.
+- Generic Edit View : 폼을 통해 객체를 생성,수정,삭제 기능을 제공.
+- Generic Date View : 날짜 기반 객체의 년/월/일 페이지로 구분하여 보여줌.
+
+### 클래스형 뷰에서의 폼 처리
+폼 처리과정
+- 최초의 GET 폼은 비어있거나 미리 채워진 데이터를 가짐.
+- 유효한 데이터를 가진 POST 데이터를 처리, 리다이렉트 처리됨.
+- 유효하지 않은 데이터는 POST 에러메시지와 폼이 다시 출력됨.
+
+## 로그
+로그란?
+- log, 애플리케이션의 상태를 관찰할 수 있도록 애플리케이션이 제공하는 정보
+- 현재 우리의 프로그램이 어떤 상태를 가지고 있는지 외부 출력을 하게 만들어 개발자들이 눈으로 직접 확인하는 것
+
+장고의 로깅은 기본적으로 파이썬의 로깅 체계를 그대로 따르면서 일부만 추가되었음.
+
+장고의 runserver나 웹 서버에 의해 장고가 실행될 때 장고는 settings.py 파일에 정의된 LOGGING_CONFIG,LOGGING 항목을 참고하여 로깅에 관련된 설정을 처리하고 
+settings.py 파일에 관련 항목이 없더라도 디폴트 로깅 설정으로 처리됨.
+장고의 로깅은 실행되는 시점부터 준비되어있어 항상 로그를 기록하는 것이 가능.
+### 파이썬의 로깅 모듈
+로거,핸들러,필터,포맷터 4가지의 주요 컴포넌트로 구성됨.
+#### 로거
+- 로깅 시스템의 시작점, 로그 메시지를 처리하기위해 메시지를 담아두는 저장소
+- 모든 로거는 이름을 가지고 있으며 로그 메시지의 중요도에 따라 자신이 어느 레벨 이상의 메시지를 처리할지에 대한 로그레벨을 가짐.
+
+로그레벨
+- DEBUG : 디버그 용도로 사용되는 정보, 로그레벨 최하위
+- INFO : 일반적이고 보편적인 정보
+- WARNING : 문제점 중에서 덜 중요한 문제점이 발생 시 이에 대한 정보
+- ERROR : 문제점 중에서 주요 문제점이 발생 시 이에 대한 정보
+- CRITICAL : 치명적인 문제점이 발생시 이에 대한 정보, 로그레벨 최상위
+
+로그레코드
+- 로거에 저장되는 메시지 로그
+- 레코드도 로그레벨을 가짐
+- 스택 트레이스 정보, 에러코드 등의 로그 이벤트에 대한 유용한 메타장보를 가지고 있음.
+
+메시지가 로거에 도착할 때 로그레코드의 로그레벨,로거의 로그레벨 비교 방법
+- 로그 레코드 로그레벨 >= 로거 로그레벨 => 메시지 처리 계속 진행
+- 로그 레코드 로그 레벨 < 로거 로그레벨 => 메시지 무시
+메시지 처리를 진행하는 것으로 결정되면 로거는 메시지를 핸들러에게 넘겨줌.
+
+#### 핸들러
+- 로거에 있는 메시지에 무슨 작업을 할지 결정하는 엔진
+- 메시지를 화면이나 파일,네트워크 소켓 등 어디에 기록할 것인지와 같은 로그 동작을 정의.
+- 핸들러도 로그레벨을 가지고 있음(로그 레코드의 로그레벨이 핸들러의 로그레벨보다 더 낮으면 핸들러는 메시지를 무시)
+- 로거는 핸들러를 여러개 가질 수 있고 각 핸들러는 서로 다른 로그레벨을 가질 수 있음 => 메시지의 중요도에 따라 다른 방식의 로그처리가 가능
+    - ex) ERROR,CRITICAL 메시지는 표준출력으로 보내는 핸들러를 만들고 차 후 분석을 위해 모든 메시지를 파일에 기록하는 다른 핸들러를 만들 수 있음.
+
+#### 필터
+- 로그 레코드가 로거에서 핸들러로 넘겨질 때 필터를 사용하여 로그 레코드에 추가적인 제어를 할 수 있음.
+
+기본 처리방식
+- 로그 레벨을 지정하여 그 로그 레벨에 해당하면 관련 로그 메시지를 출력함.
+- 필터를 적용하면 로그 처리 기준을 추가할 수 있음.
+- 필터를 추가하여 ERROR 메시지 중에서 특정 소스로부터 오는 메시지만 핸들러로 넘길 수 있음.
+- 필터를 사용하면 로그 레코드를 보내기 전 수정하는 것이 가능
+    - ex) 어떤 조건에 맞으면 ERROR 로그 레코드를 WARNING 로그레벨로 낮춰주는 필터를 만들 수 있음.
+- 필터는 로거,핸들러 어디에나 적용 가능하며 여러개의 필터를 체인 방식으로 동작 시킬 수 있음.
+
+#### 포맷터
+- 로그 레코드가 최종적으로 텍스트로 표현되는데 포맷터는 텍스트로 표현 시 정확한 포맷을 지정해줌.
+
+### logging 사용
+```python
+import logging
+
+logger = logging.getLogger(__name__) # 로거 객체를 얻음
+logger.error("Someting wrong!") # error 로그 메시지
+```
+- __name__ : 로거를 담고있는 파이썬 모듈의 이름
+- 로거를 계층화할 때 이름으로 각 로거를 구분함.
+- 로깅 호출은 부모 로거에게 전파됨.
+- 로거 객체는 각 로그 레벨 별로 로깅 호출 메소드를 가지며 메소드는 각 레벨의 로그 메시지를 생성함.
+    - logger.debug()
+    - logger.info()
+    - logger.warning()
+    - logger.error()
+    - logger.critical()
+- 이외 로깅 메소드
+    - logger.log() : 원하는 로그 레벨을 정하여 로그 메시지 생성
+    - logger.exception() : 익셉션 스택 정보를 포함하는 ERROR 레벨의 로그 메시지를 생성
+
+### 로깅 설정
+- 로깅 메소드를 호출할 때 로그 메시지를 원하는대로 기록하기 위해선 로거,핸들러,필터,포맷 등을 설정해야함.
+- 장고는 사전형 설정 방식을 디폴트로 사용.(settings.py 파일에 LOGGING 항목을 지정하지 않으면 장고는 default 로그 설정을 사용함)
+```python
+# settings.py
+LOGGING = {
+    'version':1,
+    'disable_existing_loggers':True, # 기존의 로깅 설정 비활성화
+    'formatters':{ # 포맷터 정의
+        'simple':{ # 로그 레벨 이름,로그 메시지만 출력
+            'format':'%(levelname)s %(message)s'
+        },
+        'verbose':{ # 로그 레벨 이름,로그 메시지를 만들어준 시간, 모듈명, 프로세스ID,스레드ID,로그 메시지 출력
+            'format':'%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
+    'filters':{ # 필터 정의
+        'special':{ # 별명: special , 
+            '()':'project.logging.SpecialFilter',# project.logging.SpecialFilter 라는 필터 정의
+            'foo':'bar',# 필터가 생성될 때 foo=bar 인자를 넘김
+        }
+    },
+    'handlers':{ # 핸들러 정의
+        'null':{ # null 핸들러 모든 DEBUG 및 그 이상의 메시지를 /dev/null 장치로 보내주는 NullHandler 클래스 사용
+            'level':'DEBUG',
+            'class':'logging.NullHandler',
+        },
+        'console':{ # console 핸들러 모든 DEBUG 및 그 이상의 메시지를 표준 에러로 출력해주는 StreamHandler 클래스  사용, simple 포맷터 사용
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+            'formatter':'simple'
+        },
+        'mail_admins':{ # mail_admins 핸들러 모든 ERROR 및 그 이상의 메시지를 사이트 관리자에게 이메일로 보내주는 AdminEmailHandler 사용 special 필터 사용 
+            'level':'ERROR',
+            'class':'django.utils.log.AdminEmailHandler',
+            'filters':['special']
+        }
+    },
+    'loggers':{ # 로거 정의
+        'django':{  # django 로거는 INFO 및 그 이상의 메시지를 null 핸들러에게 보내줌
+            'hanlders':['null'],
+            'propagate':True,
+            'level':'INFO', 
+        },
+        'django.request':{ # django.request 로거 모든 ERROR,CRITICAL 메시지를 mail_admins 핸들러에게 보내줌 
+            'handlers':['mail_admins'],
+            'level':'ERROR',
+            'propagate':False, # 메시지를 전파하지 않도록 설정, django.request 로거에 쓰여진 로그메시지는 django 로거에서 처리되지 않음 
+        },
+        'myproject.custom':{ # myproject.custom 로거 INFO 및 그이상의 레벨이면서 special 필터를 통과한 모든 메시지를 console과 mail_admins 핸들러에게 보내줌 
+            # INFO 그 이상의 모든 메시지들이 콘솔에 출력되고 ERROR 및 CRITICAL 메시지들은 콘솔/이메일로 송신
+            'handlers':['console','mail_admins'],
+            'level':'INFO',
+            'filters':['special']
+        }
+    }
+}
+
+```
