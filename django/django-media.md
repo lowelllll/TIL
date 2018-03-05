@@ -60,7 +60,7 @@ class POST(models.Model):
 - 개발 편의성 목적으로 서빙 rule 추가가 가능함.
 - settings.DEBIG = False일 때, static 함수에서 빈 리스트를 리턴함
 ```python
-# urls.py 
+# project/urls.py 
 from django.conf import settings
 from django.conf.urls.static import static
 
