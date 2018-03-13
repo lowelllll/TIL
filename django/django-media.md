@@ -54,8 +54,30 @@ class POST(models.Model):
     # 저장 경로 MEDIA_ROOT/profile/2018/03/02 경로에 이미지 저장
     # DB 필드 'MEDIA_ROOT/profile/2018/03/02' string 저장
 ```
-
-### 2.4 urls.py 설정
+### 2.4 forms.py 설정
+- image 파일을 받을 수 있는 image form을 생성한다.
+```python
+class PostForm(forms.Form):
+    ...
+    photo = forms.ImageField()
+``` 
+### 2.5 views.py 설정
+- forms.py에서 생성한 form을 사용하여 view 로직을 짠다.
+함수형 view
+```python
+from .forms import PostForm
+def post_create(request):
+    if request.method=='POST':
+        form = PostForm(request.POST,request.FILES) # 파일 타입의 필드가 있을 경우 request.FILES를 추가해준다.
+        if form.is_valid():
+            p = Post(... photo=request.POST['photo'])
+            p.save()
+            return HttpResponseRedirect(reverse_lazy('post:detail',args=p))
+    else:
+        form = PostForm()
+    return render(request,'template',{'form':form})
+```
+### 2.6 urls.py 설정
 - 개발 환경에서 media 파일 서빙은 static 파일과 다르게 개발서버에서 기본 서빙을 지원하지 않음.
 - 개발 편의성 목적으로 서빙 rule 추가가 가능함.
 - settings.DEBIG = False일 때, static 함수에서 빈 리스트를 리턴함
@@ -63,18 +85,21 @@ class POST(models.Model):
 # project/urls.py 
 from django.conf import settings
 from django.conf.urls.static import static
-
+...
 urlpattern += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 ```
 - 기존 url 패턴에 static() 함수가 반환하는 URL 패턴을 추가한 것
     > static(prefix,view=django.views.static.serve,**kwargs)
 - settings.MEDIA_URL로 지정된 /media/ url 요청이 오면 django.views.static.serve() 뷰 함수가 처리하고, 이 함수에 따라 document_root = settings.MEDIA_ROOT 키워드 인자가 전달됨.
 
-### 2.5 template 설정
+### 2.7 template 설정
 #### 파일 업로드시 form enctype
 파일 업로드시 항상 method는 post, enctype="multipart/form-data" 속성을 지정해주어야 한다.
 ```html
-<form method="post" action="" enctype="multipart/form-data">
+<form method="post" action="." enctype="multipart/form-data">
+    {{ form.as_table }}
+    <input type="submit">
+</form>
 ```
 #### media url 처리
 ```html
