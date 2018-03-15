@@ -15,7 +15,8 @@ OAuth와 OpenID의 목적은 다름.
 ## Django에서 OAuth 사용하기
 다른 앱에서 Authentication을 획득하여 Django app에 적용하는 법
 ### 1.1 install python-social-auth
-django에서 쉽게 Authentication을 얻게 해주는 패키지 social-auth-app-django를 설치함.
+django에서 쉽게 Authentication을 얻게 해주는 패키지 social-auth-app-django를 설치함.  
++추가로 python-social-auth도 같이 설치함.
 ```python
 pip install social-auth-app-django
 ```
@@ -92,6 +93,16 @@ url(r'', include('social_django.urls', namespace='social')),
 # facebook url 'social:begin' 'facebook' 
 # twitter url 'social:begin' 'twitter' 
 ```
+### 오류 해결
+#### No module social 
+```
+No module named 'social'
+```
+- python-social-auth를 설치한다 
+```
+pip install python-social-auth
+```
+
 ## refer
 [How to add Google and Github OAuth in Django](https://fosstack.com/how-to-add-google-authentication-in-django/ )
 
