@@ -1,10 +1,10 @@
 # django 커스텀 템플릿 태그
 django에서는 템플릿 태그를 직접 커스텀 할 수 있는 기능을 제공한다.
 ## 1.1 custom_tags.py 설정
-app/templates 디렉토리 안에 custom_tags.py 파일을 생성한다.
+app/templatetags 디렉토리 안에 custom_tags.py 파일을 생성한다.
 ```
 app/
-    templates/
+    templatetags/
         ...
         custom_tags.py
 ```
