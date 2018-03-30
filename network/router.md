@@ -19,5 +19,11 @@ ipv4 버전의 ip가 동이 나기 시작하면서 공유기는 더욱 필요해
 #### private ip address 
 지역 네트워크 안에서 쓰는 ip(공유기로 연결된,사내전화)
 
+#### 로컬 ip에서 서버 요청 방법
+- 서버에 요청 request
+- 공유기에서 요청받은 private ip를 기록
+- 아이피를 private ip를 public ip로 변경하고요청을 보냄
+- public ip로 요청을 받음
+- 공유기가 응답을 보고 요청했었던 정보를 파악 후 response
 ## refer 
 https://www.youtube.com/watch?v=3HEhifFPdIs&t=14s 
