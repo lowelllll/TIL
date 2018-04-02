@@ -38,6 +38,7 @@ with 태그와 유사하지만 {% endwith %} 처럼 끝을 맺는 태그가 없�
 간편하게 변수 설정을 할 수있음.
 - 이 태그는 django 2.0 version부터 제공하지 않음.
 > you may be seeing this error after upgrading to Django 2.0. This is because assignment_tag was deprecated in Django 1.9, and removed in Django 2.0:  
+
 따라서 assingment_tag 기능을 하기 위해선 simple_tag를 사용한 후 assingment_tag와 같은 방법으로 변수를 할당해줌.
 ```python
 # custom_tags.py
