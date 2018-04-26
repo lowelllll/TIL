@@ -81,5 +81,20 @@ $ vi secret.json # secret.json 파일 생성
     "SECRET_KEY":"~!@!@$!@~$~!"
 }
 ``` 
+### media 설정
+Debug=False 일 때,media 파일들이 보이지 않는 오류 해결.  
+
+- settings.py 설정
+    ```python
+    # proejct/settings.py
+    ...
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = '/home/<your-id>/<project-path>/media'
+    ```
+- WEB APP의 static files 설정
+    - url에 설정한 MEDIA_URL 입력.
+    - directory에 설정한 MEDIA_ROOT 입력.
+
+이 방법으로 Debug=False일 때 media 파일을 서빙할 수 있다.
 ## refer
 http://www.itworld.co.kr/news/106437#csidx59998154441e30d841a9ea9879ac611 
