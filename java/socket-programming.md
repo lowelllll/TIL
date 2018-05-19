@@ -86,6 +86,7 @@ try{
 
 ##### backlog 옵션
 > 대기 큐의 크기  
+
 서버 소켓에 대한 연결 요구를 몇 개 까지 받아들이는가?
 
 ```java
@@ -97,5 +98,3 @@ socket = theServer.accept(); // 접속이 되면 Socket 객체를 반환함.
 
 theServer.close(); // 서버소켓을 닫음.
 ```
-
-
