@@ -1,5 +1,6 @@
 # heroku로 django project 배포하기
-PaaS 서비스 중 하나인 heroku를 통해 django project를 배포하는 법.
+> PaaS 서비스 중 하나인 heroku를 통해 django project를 배포하는 법.
+
 git이 설치되어있다고 가정한다.
 
 1. heroku 회원가입
