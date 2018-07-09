@@ -57,7 +57,7 @@
 - 고정 아이피를 받고 인스턴스에 붙이지 않을 경우 과금.
 - 하나의 인스턴스에 여러 개 고정 아이피를 붙일 경우 과금.
 
-#### scala up 과정
+#### scale up 과정
 1. 기존의 인스턴스를 이미지화.  
     (인스턴스가 잠깐 멈춤)
 2. 더 좋은 인스턴스로 교체
@@ -65,3 +65,36 @@
     (Elastic IPs에서 고정 아이피를 인스턴스 변경)
 
 인스턴스를 이미지화 할 때 인스턴스가 잠깐 멈추므로 (서버 접속이 끊김)신중하게 해야함.
+
+### scale out
+> 여러 대의 컴퓨터를 연결해서 협력해 일을 하는 것.
+
+수요가 많아져 `scale up`을 하다보면 단일 컴퓨터로서 한계가 있기 때문에 `scale out`이 필요함.
+
+- 컴퓨터 한대가 담당하고 있었던 것을 나눔.
+- 여러 대의 컴퓨터가 협동해서 일을 처리함.  
+    - 한 컴퓨터에서 웹 서버, 미들웨어, 데이터베이스를 처리하는 것을 `scale out`을 해서 컴퓨터별로 역할을 나눠 처리하게 함.
+    - ex) 한대의 컴퓨터에선 웹 서버, 미들웨어를 처리하고 다른 컴퓨터에선 데이터베이스를 처리하고 있을 때   
+    데이터베이스가 방대해질 경우 새로운 컴퓨터에 데이터베이스를 하나 더 설치하고 기존 데이터베이스에 추가,삭제되는 데이터를 복사하여 두개의 데이터베이스의 상태를 동일하게 함.  
+    <b>읽기,쓰기 하는 데이터베이스를 나눔.</i>
+
+![scale_up-scale_out](https://turbonomic.com/wp-content/uploads/2015/05/ScaleUpScaleOut_sm-min.jpg)
+
+
+#### Load Balancer
+> 사용자의 접속을 적당한 서버로 보내주는 중계자.   
+부하의 균형을 잡아줘 부하가 골고루 분산될 수 있게하는 시스템
+
+- 웹 서비스를 처리하는 웹 서버가 나눠져 있을 때, `Load Balancer`의 아이피로 접속하면 `Load Balancer`가 적당한 서버로 요청을 보내줌.
+- AWS가 직접 관리해줌.
+
+##### Health check
+`Load Balancer`는 각각의 인스턴스에 사용자들의 요청을 분산해주기 때문에
+정기적으로 각각의 인스턴스에 접속해서 살아있는지 죽어있는지 확인함.
+
+방법 : 각 서버의 index.html에 ELB가 접속했을 때 접속할 수 있다면 컴퓨터가 살아있다는 것이고, 오류가 있다면 사용자의 요청을 그 서버로 돌리지 않음.
+
+![load balanber](https://docs.microsoft.com/ko-kr/azure/load-balancer/media/load-balancer-overview/ic727496.png)
+
+## refer 
+[생활코딩 AWS](https://www.youtube.com/playlist?list=PLuHgQVnccGMC5AYnBg8ffg5utOLwEj4fZ&disable_polymer=true)
