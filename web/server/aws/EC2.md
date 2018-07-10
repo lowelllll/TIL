@@ -76,25 +76,39 @@
     - 한 컴퓨터에서 웹 서버, 미들웨어, 데이터베이스를 처리하는 것을 `scale out`을 해서 컴퓨터별로 역할을 나눠 처리하게 함.
     - ex) 한대의 컴퓨터에선 웹 서버, 미들웨어를 처리하고 다른 컴퓨터에선 데이터베이스를 처리하고 있을 때   
     데이터베이스가 방대해질 경우 새로운 컴퓨터에 데이터베이스를 하나 더 설치하고 기존 데이터베이스에 추가,삭제되는 데이터를 복사하여 두개의 데이터베이스의 상태를 동일하게 함.  
-    <b>읽기,쓰기 하는 데이터베이스를 나눔.</i>
+    <b>읽기,쓰기 하는 데이터베이스를 나눔.</b>
 
 ![scale_up-scale_out](https://turbonomic.com/wp-content/uploads/2015/05/ScaleUpScaleOut_sm-min.jpg)
 
 
-#### Load Balancer
+### Load Balancer(ELB)
 > 사용자의 접속을 적당한 서버로 보내주는 중계자.   
 부하의 균형을 잡아줘 부하가 골고루 분산될 수 있게하는 시스템
 
-- 웹 서비스를 처리하는 웹 서버가 나눠져 있을 때, `Load Balancer`의 아이피로 접속하면 `Load Balancer`가 적당한 서버로 요청을 보내줌.
-- AWS가 직접 관리해줌.
+![load balanber](https://docs.microsoft.com/ko-kr/azure/load-balancer/media/load-balancer-overview/ic727496.png)
 
-##### Health check
+- 웹 서비스를 처리하는 웹 서버가 나눠져 있을 때, `Load Balancer`의 아이피로 접속하면 `Load Balancer`가 적당한 서버로 요청을 하여 결과를 받아와 사용자에게 뿌려줌.
+- AWS가 직접 관리해줌. `Elastic Load Balancer`
+
+#### Health check
 `Load Balancer`는 각각의 인스턴스에 사용자들의 요청을 분산해주기 때문에
 정기적으로 각각의 인스턴스에 접속해서 살아있는지 죽어있는지 확인함.
 
 방법 : 각 서버의 index.html에 ELB가 접속했을 때 접속할 수 있다면 컴퓨터가 살아있다는 것이고, 오류가 있다면 사용자의 요청을 그 서버로 돌리지 않음.
 
-![load balanber](https://docs.microsoft.com/ko-kr/azure/load-balancer/media/load-balancer-overview/ic727496.png)
+#### ELB 주의사항
+<b><i>데이터 베이스를 포함한 인스턴스는 ELB를 사용할 때 조심해야함.</i></b>
+
+- 웹 서버는 정적인 파일이기 때문에(로직이 같기) ELB를 통해 어느 서버를 접속해도 사용자에게 응답하는 결과는 같지만,  
+데이터베이스는 동적인 파일이고 사용자에 의해 값이 추가,삭제되기 때문에 ELB를 통해 접속할 때 응답하는 결과가 다를 수 있어짐.
+
+ex) 인스턴스1 database와 인스턴스2 database가 scale out으로 나눠져 있을 경우
+
+user1이 ELB를 통해 인스턴스1 database에 글을 저장하고 다시 글을 보려고 할 때
+ELB를 통해  인스턴스2를 접속하게 되면 자신이 쓴 글을 볼 수 없음.(user1이 쓴 글은 인스턴스1 database에 저장되어있기 때문)
+
+따라서 , 데이터베이스는 별도의 컴퓨터를 빼서 그 컴퓨터에 저장해야함.(데이터베이스의 복사본을 만들던가)  
+이렇게 하면 ELB가 어느 쪽의 있는 웹 서버로 사용자의 요청을 보내더라도 동일한 데이터베이스에 있는 데이터를 CRUD할 수 있음.
 
 ## refer 
 [생활코딩 AWS](https://www.youtube.com/playlist?list=PLuHgQVnccGMC5AYnBg8ffg5utOLwEj4fZ&disable_polymer=true)
