@@ -110,5 +110,28 @@ ELB를 통해  인스턴스2를 접속하게 되면 자신이 쓴 글을 볼 수
 따라서 , 데이터베이스는 별도의 컴퓨터를 빼서 그 컴퓨터에 저장해야함.(데이터베이스의 복사본을 만들던가)  
 이렇게 하면 ELB가 어느 쪽의 있는 웹 서버로 사용자의 요청을 보내더라도 동일한 데이터베이스에 있는 데이터를 CRUD할 수 있음.
 
+### AutoScaling
+> 인스턴스를 생성해 ELB에 붙이는 것을 자동화 하는 것
+
+- AWS의 꽃 :flower
+- 인스턴스를 자동으로 생성,삭제함.
+    - 클라우드 컴퓨팅을 쓰는 이유 중 하나.(탄력성)
+    - 상황에 따라 지능적으로 대처할 수 있음.
+
+#### Launch Configuration(LC)
+> AutoScaling을 할 때 자동으로 인스턴스가 생성되는 데, LC에서 설정(정의)한 인스턴스가 생성됨. 
+
+- launch : 이미지를 실제 동작하는 인스턴스로 만드는 행위(설정)
+- `auto scaling group`을 만들기 전 `launch configuration`을 만들어야함.
+
+#### Auto Scaling Group
+> `launch configuration`을 통해 정의한 인스턴스를 언제,어떤 조건에서 만들 것인지 설정하는 것.
+
+이전에 생성한 LC를 가지고 어떤 조건에 의해 인스턴스를 더 생성할 것인지, 인스턴스를 삭제할 것인지 설정함.
+
+생성한 인스턴스는 `Load balancer`에 자동으로 붙일 수 있음.
+
+ex) 인스턴스의 CPU 점유율이 80% 이상인 상태가 10분간 지속된다면, LC에서 설정한 인스턴스를 1개 생성하고 CPU 점유율이 30% 이하인 상태가 10분간 지속된다면 인스턴스 1개를 제거한다. 
+
 ## refer 
 [생활코딩 AWS](https://www.youtube.com/playlist?list=PLuHgQVnccGMC5AYnBg8ffg5utOLwEj4fZ&disable_polymer=true)
