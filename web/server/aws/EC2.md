@@ -133,5 +133,12 @@ ELB를 통해  인스턴스2를 접속하게 되면 자신이 쓴 글을 볼 수
 
 ex) 인스턴스의 CPU 점유율이 80% 이상인 상태가 10분간 지속된다면, LC에서 설정한 인스턴스를 1개 생성하고 CPU 점유율이 30% 이하인 상태가 10분간 지속된다면 인스턴스 1개를 제거한다. 
 
+##### desired
+> 현재 서버 상태에 따른 인스턴스의 개수
+
+현재 서버의 부하가 지속되어 CPU 점유율이 높아지면 LC에서 설정한 인스턴스 개수만큼 desired가 설정됨.
+desired가 3이고 현재 인스턴스가 1이면 2개의 인스턴스가 곧 생김.  
+반대로 서버의 CPU 점유율이 낮은 상태가 지속되어 desired가 1개가 되면 2개의 인스턴스가 terminated가 됨.  
+(어느 인스턴스가 terminate 될 진 )
 ## refer 
 [생활코딩 AWS](https://www.youtube.com/playlist?list=PLuHgQVnccGMC5AYnBg8ffg5utOLwEj4fZ&disable_polymer=true)
