@@ -51,21 +51,87 @@ use 명령어는 해당 데이터베이스를 사용하겠다는 의미이다.
 | db                        |
 | ...                       |
 | time_zone_transition_type |
-| user                      |
 +---------------------------+
 ```
+### table 생성
+```
+> create table topic (
+id int(11) not null auto_increment,
+title varchar(100) not null,
+description text null,
+created datetime not null,
+author varchar(15) null,
+profile varchar(200) null,
+primary key(id)); 
+```
+#### Primary Key (주요 키)
+- 값이 고유하고 중복되지 않음.
+- 각각의 행(row)을 식별하는 식별자
+
+#### auto_increment
+- 중복되지 않는 값을 자동으로 만들어줌.
+
 ### table 확인
 table 필드,필드 속성 조회
 ```
-> desc user;
-+------------------------+-----------------------------------+------+-----+----------+-------+
-| Field                  | Type                              | Null | Key | Default  | Extra |
-+------------------------+-----------------------------------+------+-----+----------+-------+
-| Host                   | char(60)                          | NO   | PRI |          |       |
-| User                   | char(80)                          | NO   | PRI |          |       |
-| Password               | char(41)                          | NO   |     |          |       |
-| ......                 |                                   |      |     |          |       |
-+------------------------+-----------------------------------+------+-----+----------+-------+
+> desc topic;
+### 데이터 생성
+```
+> insert into topic (title,description,created,author ,profile) values ('MySQL','Mysql is...',NOW(),'yejin','i am yejin');
+```
+### 데이터 조회 
+```
+# 일반 조회
+> select * from topic;
+
+# 조건식
+> select * from topic where id = 1;
+
+# 정렬 (내림차순)
+> select * from topic order by id desc; 
+
+# 제한
+> select * from topic limit 5;
+```
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int(11)      | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(100) | NO   |     | NULL    |                |
+| description | text         | YES  |     | NULL    |                |
+| created     | datetime     | NO   |     | NULL    |                |
+| author      | varchar(15)  | YES  |     | NULL    |                |
+| profile     | varchar(200) | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+```
+
+### 데이터 생성
+```
+> insert into topic (title,description,created,author ,profile) values ('MySQL','Mysql is...',NOW(),'yejin','i am yejin');
+```
+### 데이터 조회 
+```
+# 일반 조회
+> select * from topic;
+
+# 조건식
+> select * from topic where id = 1;
+
+# 정렬 (내림차순)
+> select * from topic order by id desc; 
+
+# 제한
+> select * from topic limit 5;
+```
+
+### 데이터 수정
+```
+update topic set description = 'oracle is ..' , title = 'Oracle' where id = 1;
+```
+
+### 데이터 삭제
+```
+delete from topic where id = 1;
 ```
 ###  그룹 함수
 #### COUNT()
