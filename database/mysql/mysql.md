@@ -75,9 +75,20 @@ primary key(id));
 table 필드,필드 속성 조회
 ```
 > desc topic;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int(11)      | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(100) | NO   |     | NULL    |                |
+| description | text         | YES  |     | NULL    |                |
+| created     | datetime     | NO   |     | NULL    |                |
+| author      | varchar(15)  | YES  |     | NULL    |                |
+| profile     | varchar(200) | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+```
 ### 데이터 생성
 ```
-> insert into topic (title,description,created,author ,profile) values ('MySQL','Mysql is...',NOW(),'yejin','i am yejin');
+ insert into topic (title,description,created,author ,profile) values ('MySQL','Mysql is...',NOW(),'yejin','i am yejin');
 ```
 ### 데이터 조회 
 ```
@@ -93,17 +104,7 @@ table 필드,필드 속성 조회
 # 제한
 > select * from topic limit 5;
 ```
-+-------------+--------------+------+-----+---------+----------------+
-| Field       | Type         | Null | Key | Default | Extra          |
-+-------------+--------------+------+-----+---------+----------------+
-| id          | int(11)      | NO   | PRI | NULL    | auto_increment |
-| title       | varchar(100) | NO   |     | NULL    |                |
-| description | text         | YES  |     | NULL    |                |
-| created     | datetime     | NO   |     | NULL    |                |
-| author      | varchar(15)  | YES  |     | NULL    |                |
-| profile     | varchar(200) | YES  |     | NULL    |                |
-+-------------+--------------+------+-----+---------+----------------+
-```
+
 
 ### 데이터 생성
 ```
@@ -126,13 +127,20 @@ table 필드,필드 속성 조회
 
 ### 데이터 수정
 ```
-update topic set description = 'oracle is ..' , title = 'Oracle' where id = 1;
+> update topic set description = 'oracle is ..' , title = 'Oracle' where id = 1;
 ```
 
 ### 데이터 삭제
 ```
 delete from topic where id = 1;
 ```
+
+### JOIN
+<b><i>관계형 데이터베이스의 꽃</i></b>  
+```
+>  select topic.id as topic_id,title,description,created,name,profile from topic left join author on topic.author_id = author.id;
+```
+
 ###  그룹 함수
 #### COUNT()
 컬럼의 총 항목 수를 구해줌.
@@ -155,4 +163,5 @@ delete from topic where id = 1;
 +-------------+
 ```
 
-
+## refer
+[생활코딩 database2](https://www.youtube.com/watch?v=h_XDmyz--0w&list=PLuHgQVnccGMCgrP_9HL3dAcvdt8qOZxjW&index=1)
