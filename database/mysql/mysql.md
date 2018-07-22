@@ -128,12 +128,6 @@ table 필드,필드 속성 조회
 > delete from topic where id = 1;
 ```
 
-### JOIN
-<b><i>관계형 데이터베이스의 꽃</i></b>  
-```database
->  select topic.id as topic_id,title,description,created,name,profile from topic left join author on topic.author_id = author.id;
-```
-
 ### GROUP BY
 대상이 되는 데이터를 그룹으로 나눠 집계할 수 있음.
 ```database
@@ -219,5 +213,90 @@ table 필드,필드 속성 조회
 +-------------------------------------------+
 ```
 
+### View
+> 데이터를 가지지 않는 가상의 테이블
+
+SQL 시점에서는 테이블과 동일하지만 테이블과 같은 데이터는 가지고 있지 않으며, 테이블에 대한 SELECT를 가짐.
+
+#### 뷰 생성
+`create view 뷰 이름 (열1,[열2..]) as select 문`
+
+#### 뷰를 사용하는 이점
+1. 복잡한 select문을 일일이 매번 기술할 필요가 없음
+2. 필요한 열고 ㅏ행만 사용자에게 보여줄 수 있고 갱신시에도 뷰 정의에 따른 갱신으로 한정할 수 있음.
+3. 1,2 이점을 데이터 저장없이 (기억장치의 용량을 사용하지 않음) 실현할 수 있음.
+4. 뷰를 제거해도 참조하는 테이블은 영향을 받지 않음.
+
+```
+# 기존 테이블의 SELECT
+> select * from city where countrycode = 'KOR' 
++------+------------+---------------+------------+
+| id   | name       | district      | population |
++------+------------+---------------+------------+
+| 2332 | Pusan      | Pusan         |    3804522 |
+| 2333 | Inchon     | Inchon        |    2559424 |
+| 2400 | Mun-gyong  | Kyongsangbuk  |      92239 |
++------+------------+---------------+------------+
+
+# 뷰 생성
+> create view citykorea as select * from city where countrycode ='KOR';
+
+# 뷰로 SELECT
+> select * from citykorea;
++------+------------+---------------+------------+
+| id   | name       | district      | population |
++------+------------+---------------+------------+
+| 2332 | Pusan      | Pusan         |    3804522 |
+| 2333 | Inchon     | Inchon        |    2559424 |
+| 2400 | Mun-gyong  | Kyongsangbuk  |      92239 |
++------+------------+---------------+------------+
+```
+
+### 서브쿼리
+> 스칼라 값을 데이터처럼 다루거나 수치처럼 취급해 조건문에 이용할 수 있는 것.
+
+```
+# 도시의 인구가 평균 이상인 도시의 개수를 구함.
+> select count(*) from cirtkorea where population > (select avg(population) from cirtkorea);
+
+# 각 행정구역에서 인구 평균을 구해 각 행정구역 내에서 인구가 평균보다 많은 도시를 구함.
+> select district , name, population from cirtkorea as c1 where population > (select avg(population) from cirtkorea as c2 where c1.district = c2.district group by district);
+```
+솔직히 2번째 이해안감.. help me.. 
+
+#### 스칼라 값
+> 하나의 열과 하나의 행으로 구성된 테이블. 즉 <b>단일값</b>으로 구성된 경우
+
+```
+# 스칼라 값 예
+> select count(*) from city;
++----------+
+| count(*) |
++----------+
+|     4078 |
++----------+
+```
+
+### JOIN
+<b><i>관계형 데이터베이스의 꽃</i></b>  
+
+하나의 테이블에 있는 열만으로는 데이터가 충족되지 않는 경우 열을 가지고오는 조작.
+
+```database
+>  select topic.id as topic_id,title,description,created,name,profile from topic left join author on topic.author_id = author.id;
+```
+
+#### INNER JOIN
+> 내부결합, ON으로 지정한 결합조건이 일치하는 행만을 2개의 테이블로부터 가져옴.
+```
+> select countrylanguage.* , country.name from countrylanguage inner join country on countrylanguage.countrycode = country.code where language = 'Korean';
+```
+
+#### OUTER JOIN
+> 외부결합, 한쪽 테이블을 기준으로 전체 행을 표시하고 다른 테이블은 일치하면 값이 표시되고 일치하지 않으면 NULL로 표현됨.
+```
+# LEFT JOIN은 왼쪽 테이블 기준
+> select countrylanguage.*, country.name from countrylanguage left outer join country on countrylanguage.countrycode = country.code where language = 'Esperanto';
+```
 ## refer
 [생활코딩 database2](https://www.youtube.com/watch?v=h_XDmyz--0w&list=PLuHgQVnccGMCgrP_9HL3dAcvdt8qOZxjW&index=1)
