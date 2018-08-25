@@ -36,14 +36,14 @@ Python의 웹 프레임워크
 - 장고는 *.py 파일의 변경여부를 감시하고 있다가 변경이 되면 변경내역을 바로 서버에 반영을 해줌.(웹 서버를 다시 킬 필요가 없음)
 
 ## Django 설치
+
 - django는 파이썬 언어로 만들어졌기 때문에 파이썬이 동작하는 플랫폼에서 설치 및 사용이 가능함.
 
 ### pip를 사용하여 django 설치
 - pip : python install program으로 파이썬의 오픈 소스 저장소인 pyPI(python package index)에 있는 sw 패키지를 설치하고 관리해주는 명령.
 - 파이썬을 설치하면 자동으로 설치됨
-cmd
 
-    pip install Django # Django 설치
+    `pip install Django` Django 설치
 
 #### Django 업그레이드
 
@@ -56,7 +56,36 @@ python shell
 >>> print django.get_version()
 ```
 
+#### Django version 확인
+
+``` 
+django-admin --version
+```
+
+
+
+## Django의 기본 구조
+
+#### URL conf
+
+- 미리 URL별로 호출할 함수를 등록함.
+- URL conf에서 등록되지 않은 URL에 접속하면 404 error 발생.
+
+#### View
+
+- URL conf에 맞춰 호출되는 함수
+
+#### Model
+
+- 파이썬 코드로 데이터베이스를 처리함.
+- 직접 DB에 접속,제어하지 않고 DB데이터를 받아올 수 있음.
+
+#### Template
+
+- HTML 응답을 효과적으로 주기 위한 HTML 응답 소스
+
 ## Django 애플리케이션 개발 방식
+
 - 웹 개발,웹 서비스 개발-> 웹 애플리케이션 개발
 ### 애플리케이션
 - 웹 사이트를 설계할 때 가장 먼저 해야할 일 : 프로그램이 해야 할 일을 적당한 크기로 나누어 모듈화 하는 것
@@ -153,7 +182,7 @@ form . import views
 urlpatterns = [
     url(r'^$',views.index),
 ]
-```      
+```
 - URLconf를 사용하면 url과 뷰 함수를 서로 자유롭게 연결할 수 있어 url과 뷰 함수 이름이 자주 바뀌는 경우에도 URLconf에서 매핑한 부분만 수정하면 됨.
 
 ### 웹 클라이언트가 웹 서버에 페이지 요청 시, 장고에서 URL을 분석하는 순서
@@ -184,7 +213,7 @@ def current_datetime(request):
 ```python
 return HttpResponseNotFound('<h1>Page not Found</h1>')
 ```
-- - - 
+- - -
 
 ## 프로젝트 시작하기
 - 장고를 사용할 때 프로젝트 디렉토리와 애플리케이션 디렉토리를 구분하여 코딩하는 파일도 적절한 위치에 저장해야함.
