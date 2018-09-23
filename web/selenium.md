@@ -31,7 +31,31 @@ driver.get('https://google.com') # url에 접근.
 
 ```
 
+### Chome headless 모드로 크롤링
+
+창이 없이, 즉 브라우저 창을 실제로 운영체제의 창으로 띄우지 않고 렌더링을 가상으로 진행해주는 방법
+
+크롤링하는 것은 기존의 셀레니엄 코드와 비슷하며 코드 윗부분에 headless 옵션을 추가해주기만 하면 됨.
+
+```python
+# headless chrome driver 로드 / 설정
+options = webdriver.ChromeOptions()
+options.add_argument('headless')
+options.add_argument('window-size=1920x1080')
+options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36") # headless가 탐지되는 것을 막는 user-agent 옵션을 추가함.
+
+
+driver = webdriver.Chrome('./chromedriver',options=options) # 기존 chrome driver에 headless 옵션 추가
+
+# 크롤링하는 것은 기존 셀레니엄코드와 동일.
+```
+
+
+
+
+
 ## refer
+
 https://beomi.github.io/2017/02/27/HowToMakeWebCrawler-With-Selenium/
 
 http://wiki.gurubee.net/pages/viewpage.action?pageId=6259762
