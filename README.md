@@ -1,6 +1,7 @@
 # TIL
 📝 Today I Learned 
 
+`2018년 12월 이후로 TIL은 블로그(lowelllll.github.io)에 작성합니다.`
 
 ## 1. 규칙
 - 매일 새로 배운 내용을 기록한다.
